@@ -1,8 +1,8 @@
 {
-  "name": "NodeBootstrapSkeleton",
-  "version": "0.0.0",
+  "name": "DatabaseCalendar",
+  "version": "0.0.1",
   "private": true,
-  "description": "Starter app for rapid Node & Bootstrap development.",
+  "description": "CSE412 Phase 3 Calendar Application",
   "scripts": {
     "start": "node ./bin/www"
   },
@@ -18,6 +18,7 @@
     "morgan": "~1.7.0",
     "node-uuid": "^1.4.7",
     "pg": "^6.0.3",
+    "redis": "^2.7.1",
     "request": "^2.74.0"
   },
   "repository": {
