@@ -31,4 +31,11 @@ app.use(function(req, res) {
   res.render('lost');
 });
 
+// Uncomment to host on port 3000
+/*
+app.listen(3000,function(){
+    console.log("App Started on PORT 3000");
+});
+*/
+
 module.exports = app;
