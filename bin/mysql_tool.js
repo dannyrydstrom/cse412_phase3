@@ -2,7 +2,6 @@
 
 let mysql = require('mysql');
 let db_config = require('./secret_settings').db_config;
-//mysql.defaults.ssl = require('./secret_settings').mysql_ssl;
 
 let connection = new mysql.createConnection(db_config);
 connection.connect();
