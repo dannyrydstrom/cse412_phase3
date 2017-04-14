@@ -4,12 +4,12 @@
 // NEVER commit the real settings file to Git. EVER. //
 
 let local_settings = {
-  pg_user: 'root',
-  pg_db: 'cse412_phase3',
-  pg_pass: '',
-  pg_host: 'localhost', //localhost for local
-  pg_port: 5432, //usually 5432 for local
-  pg_ssl: false, //usually false for local and true for cloud
+  mysql_user: 'root',
+  mysql_db: 'cse412_phase3',
+  mysql_pass: '',
+  mysql_host: 'localhost', //localhost for local
+  mysql_port: 5432, //usually 5432 for local
+  mysql_ssl: false, //usually false for local and true for cloud
   aes_alg: 'aes-256-ctr', //there are others if you wanna Google the NodeJS crypto library
   aes_pass: 'null', //pick a really long and secure string
   sesh_name: 'calookie', //calendar cookie
