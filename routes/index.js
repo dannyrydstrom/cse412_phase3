@@ -2,7 +2,7 @@
 
 let app = require('../app');
 let express = require('express');
-let pg_tool = require('../bin/pg_tool');
+let mysql_tool = require('../bin/mysql_tool');
 let aes_tool = require('../bin/aes_tool');
 let bcrypt = require('bcrypt-nodejs');
 let redis_tool = require('../bin/redis_tool');

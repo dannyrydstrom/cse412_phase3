@@ -1,11 +1,11 @@
 'use strict';
 
-let pg_user;
-let pg_db;
-let pg_pass;
-let pg_host;
-let pg_port;
-let pg_ssl;
+let mysql_user;
+let mysql_db;
+let mysql_pass;
+let mysql_host;
+let mysql_port;
+let mysql_ssl;
 
 let aes_alg;
 let aes_pass;
@@ -20,16 +20,16 @@ let redis_password;
 
 if (process.env.im_live) {
   console.log('loading prod settings..');
-  pg_user = process.env.pg_user;
-  pg_db = process.env.pg_db;
-  pg_pass = process.env.pg_pass;
-  pg_host = process.env.pg_host;
-  pg_port = process.env.pg_port;
+  mysql_user = process.env.mysql_user;
+  mysql_db = process.env.mysql_db;
+  mysql_pass = process.env.mysql_pass;
+  mysql_host = process.env.mysql_host;
+  mysql_port = process.env.mysql_port;
   aes_alg = process.env.aes_alg;
   aes_pass = process.env.aes_pass;
   sesh_name = process.env.sesh_name;
   sesh_secret = process.env.sesh_secret;
-  pg_ssl = process.env.pg_ssl;
+  mysql_ssl = process.env.mysql_ssl;
   redis_port = process.env.redis_port;
   redis_host = process.env.redis_host;
   redis_password = process.env.redis_password;
@@ -37,27 +37,27 @@ if (process.env.im_live) {
 else {
   console.log('loading local settings..');
   let local_settings = require('./local_settings');
-  pg_user = local_settings.pg_user;
-  pg_db = local_settings.pg_db;
-  pg_pass = local_settings.pg_pass;
-  pg_host = local_settings.pg_host;
-  pg_port = local_settings.pg_port;
+  mysql_user = local_settings.mysql_user;
+  mysql_db = local_settings.mysql_db;
+  mysql_pass = local_settings.mysql_pass;
+  mysql_host = local_settings.mysql_host;
+  mysql_port = local_settings.mysql_port;
   aes_alg = local_settings.aes_alg;
   aes_pass = local_settings.aes_pass;
   sesh_name = local_settings.sesh_name;
   sesh_secret = local_settings.sesh_secret;
-  pg_ssl = local_settings.pg_ssl;
+  mysql_ssl = local_settings.mysql_ssl;
   redis_port = local_settings.redis_port;
   redis_host = local_settings.redis_host;
   redis_password = local_settings.redis_password;
 }
 
 let db_config = {
-  user: pg_user,
-  database: pg_db,
-  password: pg_pass,
-  host: pg_host,
-  port: pg_port,
+  user: mysql_user,
+  database: mysql_db,
+  password: mysql_pass,
+  host: mysql_host,
+  port: mysql_port,
   max: 12,
   idleTimeoutMillis: 30000,
 };
@@ -86,7 +86,7 @@ let secret_settings = {
   db_config: db_config,
   aes_config: aes_config,
   session_config: session_config,
-  pg_ssl: pg_ssl,
+  mysql_ssl: mysql_ssl,
   api_settings: api_settings,
   redis_config: redis_config
 };
