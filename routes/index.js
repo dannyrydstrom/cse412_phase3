@@ -20,6 +20,14 @@ router.get('/', function(req, res) {
   else res.render('login');
 });
 
+// Main calendar page
+router.get('/calendar', function(req, res) {
+  if (req.session.userID) {
+    res.render('calendar');
+  }
+  else res.redirect('/');
+});
+
 // Authorize login
 router.post('/auth', function(req, res) {
   // get userID and pass from request
