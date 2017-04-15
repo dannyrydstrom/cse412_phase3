@@ -56,6 +56,7 @@ let db_config = {
   user: mysql_user,
   database: mysql_db,
   password: mysql_pass,
+  multipleStatements: true,
   host: mysql_host,
   port: mysql_port,
   max: 12,

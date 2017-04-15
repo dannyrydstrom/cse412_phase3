@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <%- include('header'); %>
+    <title>App | Home</title>
+    <script type="text/javascript" src="javascripts/home.js"></script>
+  </head>
+  <%- include('navbar'); %>
+  <body class="container" style="padding-top:20px;">
+    <!- Template from: http://bootsnipp.com/snippets/featured/compact-login-form-bs-3 ->
+    <div class="container">
+        <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Please sign in<div hidden="true"><div> </div></h3>
+              <h3 class="panel-title" id="errormsg" style='font-weight: bold; color:#B22222;' align="center"></h3>
+          </div>
+            <div class="panel-body">
+              <form id="infoForm" action="/auth" method = "post" accept-charset="UTF-8" role="form">
+                <fieldset>
+                  <div class="form-group">
+                    <input name="username" class="form-control" placeholder="Username" type="text">
+                  </div>
+                  <div class="form-group">
+                    <input name="password" class="form-control" placeholder="Password" type="password" value="">
+                  </div>
+                    <input id="submitBtn" class="btn btn-lg btn-success btn-block" type="submit" value="Login">
+                </fieldset>
+              </form>
+              <h4><a id="registerSwitch" href="/register" >Register Here!</a></h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script language="javascript">
+    var isLogin = true;
+    var urlParams;
+    var regSwitch = document.getElementById("registerSwitch");
+    var submitBtn = submitBtn = document.getElementById("submitBtn");
+    var infoForm = infoForm = document.getElementById("infoForm");
+    (window.onload = function () {
+
+      // extract any param values from URL
+      var match,
+          pl     = /\+/g,  // Regex for replacing addition symbol with a space
+          search = /([^&=]+)=?([^&]*)/g,
+          decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+          query  = window.location.search.substring(1);
+
+      urlParams = {};
+      while (match = search.exec(query))
+        urlParams[decode(match[1])] = decode(match[2]);
+    
+      switchMode = function() {
+        if(isLogin) {
+          regSwitch.innerHTML = "Login Here!";
+          submitBtn.value = "Register";
+          infoForm.action = "/register";
+          isLogin = false;
+        }
+        else {
+          regSwitch.innerHTML = "Register Here!";
+          submitBtn.value = "Login";
+          infoForm.action = "/auth";
+          isLogin = true;
+        }
+        return false;
+      }
+      regSwitch.onclick = switchMode;
+
+      // if error value exists, show error message
+      if(urlParams["error"] == '1') {
+        let msg = document.getElementById("errormsg");
+        msg.innerText = "Username and password combination not found.";
+      }
+      if(urlParams["error"] == '2') {
+        let msg = document.getElementById("errormsg");
+        regSwitch.innerHTML = "Login Here!";
+        submitBtn.value = "Register";
+        infoForm.action = "/register";
+        isLogin = false;
+        msg.innerText = "Username already exists.";
+      }
+
+
+    })();
+    </script>
+  <%- include('footer'); %>
+</html>
