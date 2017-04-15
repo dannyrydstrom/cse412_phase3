@@ -23,13 +23,25 @@ mysql_tool.query = function(querystring, callback) {
     connection.query(
       querystring,
       function (error, results, fields) {
-        if (error) throw error;
-        let result = {
-          error: error,
-          rows: results,
-          info: fields
+        let response;
+        if (results && !error && results.length > 0) {
+          response = {
+            error: error,
+            rows: results,
+            info: fields
+          }
         }
-        callback(result);
+        else if (error) {
+          response = {
+            error: error,
+            rows: null,
+            info: fields
+          }
+        }
+        else {
+          response = null;
+        }
+        callback(response);
       }
     )
   }
@@ -41,5 +53,7 @@ mysql_tool.query = function(querystring, callback) {
     }
   }
 };
+
+mysql_tool.format = mysql.format;
 
 module.exports = mysql_tool;
