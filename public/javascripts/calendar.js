@@ -1,40 +1,24 @@
-$(function () {
-    $('[data-toggle="calendar"] > .row > .calendar-day > .events > .event').popover({
-        container: 'body',
-        content: 'Hello World',
-        html: true,
-        placement: 'bottom',
-        template: '<div class="popover calendar-event-popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+$(document).ready(function() {
+    // page is now ready, initialize the calendar...
+    // options and github  - http://fullcalendar.io/
+    $('#calendar').fullCalendar({
+        events: [{
+            id: 123,
+            title: "Test Event",
+            allDay: true,
+            start: "2017-04-15",
+            end: "2017-04-16",
+            url: "www.google.com"
+        }],
+        defaultDate: '2017-04-12',
+        defaultView: 'month'
+        // eventClick:  function(event, jsEvent, view) {
+        //     //set the values and open the modal
+        //     $("#eventInfo").html(event.description);
+        //     $("#eventLink").attr('href', event.url);
+        //     $("#eventContent").dialog({ modal: true, title: event.title });
+        // }
     });
 
-    $('[data-toggle="calendar"] > .row > .calendar-day > .events > .event').on('show.bs.popover', function () {
-        var attending = parseInt($(this).find('div.progress>.progress-bar').attr('aria-valuenow')),
-            total = parseInt($(this).find('div.progress>.progress-bar').attr('aria-valuemax')),
-            remaining = total - attending,
-            displayAttending = attending - $(this).find('div.attending').children().length,
-            html = [
-                '<button type="button" class="close"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>',
-                '<h4>'+$(this).find('h4').text()+'</h4>',
-                '<div class="desc">'+$(this).find('div.desc').html()+'</div>',
-                '<div class="location">'+$(this).find('div.location').html()+'</div>',
-                '<div class="datetime">'+$(this).find('div.datetime').html()+'</div>',
-                '<div class="space">Attending <span class="pull-right">Available spots</span></div>',
-                '<div class="attending">',
-                $(this).find('div.attending').html(),
-                '<span class="attending-overflow">+'+displayAttending+'</span>',
-                '<span class="pull-right">'+remaining+'</span>',
-                '</div>',
-                '<a href="#signup" class="btn btn-success" role="button">Sign up</a>'
-            ].join('\n');
-
-        $(this).attr('title', $(this).find('h4').text());
-        $(this).attr('data-content', html);
-    });
-
-    $('[data-toggle="calendar"] > .row > .calendar-day > .events > .event').on('shown.bs.popover', function () {
-        var $popup = $(this);
-        $('.popover:last-child').find('.close').on('click', function(event) {
-            $popup.popover('hide');
-        });
-    });
 });
+
