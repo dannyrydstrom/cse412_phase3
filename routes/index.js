@@ -22,7 +22,35 @@ router.get('/', function(req, res) {
 
 router.get('/groups', function(req, res) {
   if (req.session.userID) {
-    res.render('groups');
+    let querystr = 
+        "SELECT ??, COUNT(??) AS numberofusers " +
+        "FROM ?? " +
+        "WHERE EXISTS (SELECT ?? " +	
+        "FROM ?? " +
+        "WHERE ?? = ? " +
+        "AND ?? = ??) " +
+        "GROUP BY ??";
+    
+        let sql = mysql_tool.format(querystr, 
+        ['partof.groupID', 'partof.userID', 
+        'partof', 
+        'managesgroup.groupID', 
+        'managesgroup', 
+        'managesgroup.userID', req.session.userID, 
+        'managesgroup.groupID','partof.groupID',
+        'partof.groupID'
+        ]);
+
+
+        mysql_tool.query( sql, function(response) {
+            console.log(response.rows);
+
+            let groupsRes = {};
+            if(response.rows) groupsRes = response.rows;
+            res.render('groups',{
+                groups : groupsRes
+            })
+        });
   }
   else res.render('login');
 });

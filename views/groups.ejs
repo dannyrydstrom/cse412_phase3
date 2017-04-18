@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>App | Calendars</title>
+    <title>App | Group</title>
     <%- include('header');%>
 </head>
 <body>
@@ -20,5 +20,21 @@
             <h2>My Groups</h2>
         </div>
     </div>
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Group ID</th>
+                <th>Number of Members</th>
+            </tr>
+        </thead>
+        <tbody>
+        <% for(var i=0; i< groups.length; i++){ %>
+            <tr>
+                <td><%= groups[i].groupID%></td>
+                <td><%= groups[i].numberofusers %></td>
+            </tr>
+        <%}%>
+        </tbody>
+    </table>
 </body>
 </html>

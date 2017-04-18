@@ -4,10 +4,10 @@
 // NEVER commit the real settings file to Git. EVER. //
 
 let local_settings = {
-  mysql_user: 'root',
-  mysql_db: 'review',
-  mysql_pass: 'password',
-  mysql_host: '127.0.0.1', //localhost for local
+  mysql_user: 'danny',
+  mysql_db: 'cse412_phase3',
+  mysql_pass: '',
+  mysql_host: '70.162.7.31', //localhost for local
   mysql_port: 3306, //usually 5432 for local
   mysql_ssl: false, //usually false for local and true for cloud
   aes_alg: 'aes-256 -ctr', //there are others if you wanna Google the NodeJS crypto library
