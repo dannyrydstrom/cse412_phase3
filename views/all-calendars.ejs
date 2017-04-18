@@ -23,6 +23,7 @@
         <table class="table table-striped table-bordered table-hover">
             <thead>
                 <tr>
+                    <th>Group ID</th>
                     <th>Calendar ID</th>
                     <th>Calendar Name</th>
                 </tr>
@@ -30,6 +31,7 @@
             <tbody>
             <% for(var i=0; i<calendars.length; i++){ %>
                 <tr>
+                    <td><%= calendars[i].groupID %></td>
                     <td><a href="/calendar?id=<%= calendars[i].calID%>" id="<%= calendars[i].calID%>"><%= calendars[i].calID%></a></td>
                     <td><%= calendars[i].name %></td>
                 </tr>
