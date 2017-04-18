@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>App | Calendars</title>
+    <%- include('header');%>
+</head>
+<body>
+    <%- include('navbar');%>
+    <div class="container">
+        <h2 class="col-md-offset-6">User Calendars</h2>
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Calendar ID</th>
+                    <th>Calendar Name</th>
+                </tr>
+            </thead>
+            <tbody>
+            <% for(var i=0; i<calendars.length; i++){ %>
+                <tr>
+                    <td><a href="/calendar?id="<%= calendars[i].calID%>><%= calendars[i].calID%></a></td>
+                    <td><%= calendars[i].name %></td>
+                </tr>
+            <%}%>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

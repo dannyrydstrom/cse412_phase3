@@ -15,9 +15,46 @@ let router = express.Router();
 // Website start point
 router.get('/', function(req, res) {
   if (req.session.userID) {
-    res.redirect('/calendar');
+    res.redirect('/calendars');
   }
   else res.render('login');
+});
+
+// List of all User Calendars
+router.get('/calendars', function(req, res){
+   if(req.session.userID){
+
+       // format query to prevent sql injection
+       let querystr = "SELECT ??, ?? " +
+           "FROM ??, ?? " +
+           "WHERE ?? = ?? " +
+           "AND ?? = ? " +
+           "UNION " +
+           "SELECT ??, ?? " +
+           "FROM ??, ?? " +
+           "WHERE ?? = ?? " +
+           "AND ?? = ?";
+
+       let sql = mysql_tool.format(querystr, [
+           'calendar.calID', 'calendar.name','calendar', 'managescal', 'managescal.calID', 'calendar.calID', 'managescal.userID', req.session.userID,
+           'calendar.calID', 'calendar.name','calendar', 'sharescal', 'sharescal.calID', 'calendar.calID', 'sharescal.userID', req.session.userID
+       ]);
+
+       console.log(sql);
+
+       // run query to get all calendars for user
+       mysql_tool.query( sql, function(response) {
+           if (response) {
+               console.log(response.rows);
+               res.render('all-calendars',{
+                   calendars: response.rows
+               })
+           } else {
+               console.log("Error retrieving calendars for User")
+               res.redirect('/?error=1');
+           }
+       });
+   } else res.render('login');
 });
 
 // Main calendar page
