@@ -5,7 +5,7 @@
 
 let local_settings = {
   mysql_user: 'root',
-  mysql_db: 'review',
+  mysql_db: 'calendar',
   mysql_pass: 'password',
   mysql_host: '127.0.0.1', //localhost for local
   mysql_port: 3306, //usually 5432 for local
