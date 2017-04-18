@@ -231,7 +231,7 @@ router.post('/auth', function(req, res) {
   // run query to get user from user table
   mysql_tool.query( sql,
     function(response) {
-      if (response) {
+      if (response.rows.length > 0) {
           let SQLuser = response.rows[0]["userID"];
           req.session.userID = SQLuser;
           res.redirect('/calendars');
