@@ -40,15 +40,12 @@ router.get('/calendars', function(req, res){
            'calendar.calID', 'calendar.name','calendar', 'sharescal', 'sharescal.calID', 'calendar.calID', 'sharescal.userID', req.session.userID
        ]);
 
-       console.log(sql);
-
        // run query to get all calendars for user
        mysql_tool.query( sql, function(response) {
            if (response) {
-               console.log(response.rows);
                res.render('all-calendars',{
                    calendars: response.rows
-               })
+               });
            } else {
                console.log("Error retrieving calendars for User")
                res.redirect('/?error=1');
@@ -57,12 +54,36 @@ router.get('/calendars', function(req, res){
    } else res.render('login');
 });
 
-// Main calendar page
+// Get calendar with all events for specific Calendar
 router.get('/calendar', function(req, res) {
   if (req.session.userID) {
-    res.render('calendar');
-  }
-  else res.redirect('/');
+      let calId = req.query.id;
+
+      // format query to prevent sql injection
+      let querystr = "SELECT e.EventID, e.Title, e.Location, e.Label, e.Description, es.FromDate, es.ToDate " +
+          "FROM event e " +
+          "JOIN containsevent ce ON e.EventID = ce.EventID " +
+          "JOIN eventschedule es ON ce.EventID = es.EventID " +
+          "WHERE ce.CalendarID = ?";
+
+      let sql = mysql_tool.format(querystr, calId);
+
+      // Get all events for a specific calendar
+      mysql_tool.query( sql, function(response) {
+              if (response) {
+                  res.render('calendar', {
+                      calendar: response.rows
+                  });
+              }
+              else if (response && response.error) {
+                  console.log("Error retrieving events for calendar");
+                  if(response.error.code == "ER_DUP_ENTRY")
+                      res.redirect('/?error=2');
+                  else res.redirect('/?error=3');
+              }
+              else res.redirect('/?error=3');
+          });
+  } else res.render('login');
 });
 
 // Authorize login
@@ -86,7 +107,7 @@ router.post('/auth', function(req, res) {
       if (response) {
           let SQLuser = response.rows[0]["userID"];
           req.session.userID = SQLuser;
-          res.redirect('/calendar');
+          res.redirect('/calendars');
         }
         else {
           res.redirect('/?error=1');
@@ -132,12 +153,12 @@ router.post('/register', function(req, res) {
       if (response && response.rows) {
           let SQLuser = response.rows[0]["userID"];
           req.session.userID = SQLuser;
-          res.redirect('/calendar');
+          res.redirect('/calendars');
       }
       else if (response && response.error) {
           if(response.error.code == "ER_DUP_ENTRY")
             res.redirect('/?error=2');
-          else res.redirect('/?error=3');          
+          else res.redirect('/?error=3');
       }
       else res.redirect('/?error=3');
     });

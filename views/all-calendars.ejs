@@ -19,7 +19,7 @@
             <tbody>
             <% for(var i=0; i<calendars.length; i++){ %>
                 <tr>
-                    <td><a href="/calendar?id="<%= calendars[i].calID%>><%= calendars[i].calID%></a></td>
+                    <td><a href="/calendar?id=<%= calendars[i].calID%>" id="<%= calendars[i].calID%>"><%= calendars[i].calID%></a></td>
                     <td><%= calendars[i].name %></td>
                 </tr>
             <%}%>

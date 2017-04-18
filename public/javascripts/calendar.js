@@ -1,23 +1,35 @@
 $(document).ready(function() {
-    // page is now ready, initialize the calendar...
-    // options and github  - http://fullcalendar.io/
+
+    let events = [];
+
+    calendar.forEach(function(event){
+        events.push({
+            id: event.EventID,
+            title: event.Title,
+            start: event.FromDate,
+            end: event.ToDate
+        });
+    });
+
     $('#calendar').fullCalendar({
-        events: [{
-            id: 123,
-            title: "Test Event",
-            allDay: true,
-            start: "2017-04-15",
-            end: "2017-04-16",
-            url: "www.google.com"
-        }],
-        defaultDate: '2017-04-12',
-        defaultView: 'month'
-        // eventClick:  function(event, jsEvent, view) {
-        //     //set the values and open the modal
-        //     $("#eventInfo").html(event.description);
-        //     $("#eventLink").attr('href', event.url);
-        //     $("#eventContent").dialog({ modal: true, title: event.title });
-        // }
+        events: events,
+        defaultDate: '2017-03-12',
+        defaultView: 'month',
+        header: {
+            left: 'title today',
+            center: 'prevYear prev next nextYear',
+            right: 'month basicWeek basicDay listMonth'
+        },
+        eventRender: function (event, element) {
+            element.attr('href', 'javascript:void(0);');
+            element.click(function () {
+                $("#startTime").html(moment(event.start).format('MMM Do h:mm A'));
+                $("#endTime").html(moment(event.end).format('MMM Do h:mm A'));
+                $("#eventInfo").html(event.description);
+                $("#eventLink").attr('href', event.url);
+                $("#eventContent").dialog({modal: true, title: event.title, width: 350});
+            })
+        }
     });
 
 });

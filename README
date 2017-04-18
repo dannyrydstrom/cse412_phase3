@@ -1,0 +1,15 @@
+# Pre Reqs
+## install node
+## install redis
+## MySql
+#
+# How to run
+## 1. Run 'npm install' on console in the directory where package.json is
+## 2. Start the redis-server
+## 3. Make sure MySql server is running
+## 4. Run 'npm start' in same directory of package.json
+#
+# Create and Configure the Database
+## - Create database, with all schemas and data
+## - Go to bin/local_settings.js
+###     - configure your settings in that file

@@ -7,20 +7,21 @@
 </head>
 <body>
     <%- include('navbar'); %>
-    <div id="calendar">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span> <span class="sr-only">close</span></button>
-                    <h4 id="modalTitle" class="modal-title"></h4>
-                </div>
-                <div id="modalBody" class="modal-body"></div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button class="btn btn-primary"><a id="eventUrl" target="_blank">Event Page</a></button>
-                </div>
-            </div>
-        </div>
+    <div class="container" id="calendar">
+    </div>
+    <div id="eventContent" title="Event Details" style="display:none;">
+        Start: <span id="startTime"></span><br>
+        End: <span id="endTime"></span><br><br>
+        <p id="eventInfo"></p>
+        <p><strong><a id="eventLink" href="" target="_blank">Read More</a></strong></p>
     </div>
 </body>
+<script>
+    function htmlDecode(input){
+        var e = document.createElement('div');
+        e.innerHTML = input;
+        return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+    }
+    var calendar = JSON.parse(htmlDecode("<%= JSON.stringify(calendar) %>"));
+</script>
 </html>
