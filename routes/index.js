@@ -20,6 +20,13 @@ router.get('/', function(req, res) {
   else res.render('login');
 });
 
+router.get('/groups', function(req, res) {
+  if (req.session.userID) {
+    res.render('groups');
+  }
+  else res.render('login');
+});
+
 // List of all User Calendars
 router.get('/calendars', function(req, res){
    if(req.session.userID){
