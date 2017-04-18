@@ -28,20 +28,15 @@ router.get('/calendars', function(req, res){
        let querystr = "SELECT ??, ?? " +
            "FROM ??, ?? " +
            "WHERE ?? = ?? " +
-           "AND ?? = ? " +
-           "UNION " +
-           "SELECT ??, ?? " +
-           "FROM ??, ?? " +
-           "WHERE ?? = ?? " +
-           "AND ?? = ?";
+           "AND ?? = ? ";
 
        let sql = mysql_tool.format(querystr, [
            'calendar.calID', 'calendar.name','calendar', 'managescal', 'managescal.calID', 'calendar.calID', 'managescal.userID', req.session.userID,
-           'calendar.calID', 'calendar.name','calendar', 'sharescal', 'sharescal.calID', 'calendar.calID', 'sharescal.userID', req.session.userID
        ]);
 
-       // run query to get all calendars for user
+       // run query to get all managed calendars for user
        mysql_tool.query( sql, function(response1) {
+               //query to get group
                let querystr = "SELECT sg.groupID, cal.calID, cal.name " +
                         "FROM calendar cal, partof p, sharescalgroup sg, user u " +
                         "WHERE cal.calID = sg.calID " +
@@ -50,31 +45,33 @@ router.get('/calendars', function(req, res){
                         "AND u.userID = ? " ;
                 let sql = mysql_tool.format(querystr, [req.session.userID]);
                 mysql_tool.query( sql, function(response2) {
-                    
-                    if (response2 && response1) {
+                    // query to get shared
+                    let querystr = "SELECT ??, ?? " +
+                        "FROM ??, ?? " +
+                        "WHERE ?? = ?? " +
+                        "AND ?? = ? ";
+                    let sql = mysql_tool.format(querystr, 
+                        ['calendar.calID', 'calendar.name',
+                        'calendar', 'sharescal', 
+                        'sharescal.calID', 'calendar.calID', 
+                        'sharescal.userID', req.session.userID]
+                    );
+                    mysql_tool.query( sql, function(response3) {
+                        console.log(response3.error);
+                        let calendars = {};
+                        let shared = {};
+                        let group = {};
+                        if(response1.rows) calendars = response1.rows;
+                        if(response2.rows) group = response2.rows;
+                        if(response3.rows) shared = response3.rows;
+                        
                         res.render('all-calendars',{
-                            calendars: response1.rows,
-                            groupcals: response2.rows
+                            calendars: calendars,
+                            groupcals: group,
+                            sharedcals: shared
                         })
-                    }
-                    else if (response1) {
-                        res.render('all-calendars',{
-                            calendars: response1.rows,
-                            groupcals: {}
-                        })
-                    }
-                    else if (response2) {
-                        res.render('all-calendars',{
-                            calendars: {},
-                            groupcals: response2.rows
-                        })
-                    }
-                    else {
-                        res.render('all-calendars',{
-                            calendars: {},
-                            groupcals: {}
-                        });
-                }
+                        
+                });
             });
        });
    } else res.render('login');
