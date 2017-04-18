@@ -25,43 +25,57 @@ router.get('/calendars', function(req, res){
    if(req.session.userID){
 
        // format query to prevent sql injection
-       let querystr = 
-            "SELECT groupCalendars.groupID, groupCalendars.calID, groupCalendars.name " +
-            "FROM ( " +
-            "SELECT sg.groupID, cal.calID, cal.name " +
-            "FROM calendar cal, partof p, sharescalgroup sg, user u " +
-            "WHERE cal.calID = sg.calID " +
-            "AND sg.groupID = p.groupID " +
-            "AND u.userID = p.userID " +
-            "AND u.userID = ? " +
-            "UNION " +
-            "SELECT 'Manages' as groupID, cal.calID, name " +
-            "FROM calendar cal, managescal mc " +
-            "WHERE mc.calID = cal.calID " +
-            "AND mc.userID = ? " +
-            "UNION " +
-            "SELECT 'Shared With' as groupID, cal.calID, name " +
-            "FROM calendar cal, sharescal sc " +
-            "WHERE sc.calID = cal.calID " +
-            "AND sc.userID = ?) AS groupCalendars " +
-            "ORDER BY groupID ";
-    
+       let querystr = "SELECT ??, ?? " +
+           "FROM ??, ?? " +
+           "WHERE ?? = ?? " +
+           "AND ?? = ? " +
+           "UNION " +
+           "SELECT ??, ?? " +
+           "FROM ??, ?? " +
+           "WHERE ?? = ?? " +
+           "AND ?? = ?";
+
        let sql = mysql_tool.format(querystr, [
-           req.session.userID,
-           req.session.userID,
-           req.session.userID
+           'calendar.calID', 'calendar.name','calendar', 'managescal', 'managescal.calID', 'calendar.calID', 'managescal.userID', req.session.userID,
+           'calendar.calID', 'calendar.name','calendar', 'sharescal', 'sharescal.calID', 'calendar.calID', 'sharescal.userID', req.session.userID
        ]);
 
        // run query to get all calendars for user
-       mysql_tool.query( sql, function(response) {
-           if (response) {
-               res.render('all-calendars',{
-                   calendars: response.rows
-               });
-           } else {
-               console.log("Error retrieving calendars for User")
-               res.redirect('/?error=1');
-           }
+       mysql_tool.query( sql, function(response1) {
+               let querystr = "SELECT sg.groupID, cal.calID, cal.name " +
+                        "FROM calendar cal, partof p, sharescalgroup sg, user u " +
+                        "WHERE cal.calID = sg.calID " +
+                        "AND sg.groupID = p.groupID " +
+                        "AND u.userID = p.userID " +
+                        "AND u.userID = ? " ;
+                let sql = mysql_tool.format(querystr, [req.session.userID]);
+                mysql_tool.query( sql, function(response2) {
+                    
+                    if (response2 && response1) {
+                        res.render('all-calendars',{
+                            calendars: response1.rows,
+                            groupcals: response2.rows
+                        })
+                    }
+                    else if (response1) {
+                        res.render('all-calendars',{
+                            calendars: response1.rows,
+                            groupcals: {}
+                        })
+                    }
+                    else if (response2) {
+                        res.render('all-calendars',{
+                            calendars: {},
+                            groupcals: response2.rows
+                        })
+                    }
+                    else {
+                        res.render('all-calendars',{
+                            calendars: {},
+                            groupcals: {}
+                        });
+                }
+            });
        });
    } else res.render('login');
 });

@@ -19,7 +19,23 @@
             </div>
             <h2>My Calendars</h2>
         </div>
-
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Calendar ID</th>
+                    <th>Calendar Name</th>
+                </tr>
+            </thead>
+            <tbody>
+            <% for(var i=0; i<calendars.length; i++){ %>
+                <tr>
+                    <td><a href="/calendar?id=<%= calendars[i].calID%>" id="<%= calendars[i].calID%>"><%= calendars[i].calID%></a></td>
+                    <td><%= calendars[i].name %></td>
+                </tr>
+            <%}%>
+            </tbody>
+        </table>
+        <h3> Group Calendars </h3>
         <table class="table table-striped table-bordered table-hover">
             <thead>
                 <tr>
@@ -29,11 +45,11 @@
                 </tr>
             </thead>
             <tbody>
-            <% for(var i=0; i<calendars.length; i++){ %>
+            <% for(var i=0; i<groupcals.length; i++){ %>
                 <tr>
-                    <td><%= calendars[i].groupID %></td>
-                    <td><a href="/calendar?id=<%= calendars[i].calID%>" id="<%= calendars[i].calID%>"><%= calendars[i].calID%></a></td>
-                    <td><%= calendars[i].name %></td>
+                    <td><%= groupcals[i].groupID %></td>
+                    <td><a href="/calendar?id=<%= groupcals[i].calID%>" id="<%= groupcals[i].calID%>"><%= groupcals[i].calID%></a></td>
+                    <td><%= groupcals[i].name %></td>
                 </tr>
             <%}%>
             </tbody>
