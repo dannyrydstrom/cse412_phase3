@@ -24,7 +24,7 @@ mysql_tool.query = function(querystring, callback) {
       querystring,
       function (error, results, fields) {
         let response;
-        if (results && !error && results.length > 0) {
+        if (results && !error) {
           response = {
             error: error,
             rows: results,
