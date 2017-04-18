@@ -22,5 +22,6 @@
         return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
     }
     let calendar = JSON.parse(htmlDecode("<%= JSON.stringify(calendar) %>"));
+    let calID = JSON.parse(htmlDecode("<%= JSON.stringify(calID) %>"));
 </script>
 </html>

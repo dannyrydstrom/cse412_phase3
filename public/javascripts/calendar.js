@@ -16,8 +16,16 @@ $(document).ready(function() {
         events: events,
         defaultDate: '2017-03-12',
         defaultView: 'month',
+        customButtons:{
+            createEvent:{
+                text: 'Create Event',
+                click: function(){
+                    window.location.href = '/create-event/' + calID;
+                }
+            }
+        },
         header: {
-            left: 'title today',
+            left: 'title createEvent today',
             center: 'prevYear prev next nextYear',
             right: 'month basicWeek basicDay listMonth'
         },
@@ -29,7 +37,7 @@ $(document).ready(function() {
                 $("#eventInfo").html(event.description);
                 $("#eventLink").attr('href', event.url);
                 $("#eventContent").dialog({modal: true, title: event.title, width: 350});
-            })
+            });
         }
     });
 

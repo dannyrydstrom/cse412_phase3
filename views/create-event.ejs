@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>App | Create Event</title>
+    <%- include('header');%>
+</head>
+<body>
+<%- include('navbar');%>
+<div class="container">
+    <div class="page-header jumbotron">
+        <h2>Create Event</h2>
+    </div>
+    <form action="/event/create/<%= calId%>" method="post" class="form-horizontal">
+        <div class="form-group">
+            <label for="title" class="col-sm-2 control-label">Title</label>
+            <div class="col-sm-10">
+                <input name="Title" type="text" class="form-control" id="title" placeholder="Event Title" reqired>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="Label" class="col-sm-2 control-label">Label</label>
+            <div class="col-sm-10">
+                <input name="Label" type="text" class="form-control" id="Label" placeholder="Event Label" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="Location" class="col-sm-2 control-label">Location</label>
+            <div class="col-sm-10">
+                <input name="Location" type="text" class="form-control" id="Location" placeholder="Event Location" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="Description" class="col-sm-2 control-label">Description</label>
+            <div class="col-sm-10">
+                <textarea name="Description" class="form-control" id="Description" rows="3" required>Event Description</textarea>
+            </div>
+        </div>
+        <div class='col-md-5 col-md-offset-1'>
+            <div class="form-group">
+                <label for="FromDate" class="col-sm-2 control-label">From</label>
+                <div class='input-group date' id='FromDate'>
+                    <input name="FromDate" type='text' class="form-control" />
+                    <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+                </div>
+            </div>
+        </div>
+        <div class='col-md-5'>
+            <div class="form-group">
+                <label for="ToDate" class="col-sm-2 control-label">To</label>
+                <div class='input-group date' id='ToDate'>
+                    <input name="ToDate" type='text' class="form-control" />
+                    <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default">Create</button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+<script type="text/javascript">
+    $(function () {
+        $('#FromDate').datetimepicker({
+            format: 'YYYY-MM-DD hh:mm'
+        });
+        $('#ToDate').datetimepicker({
+            format: 'YYYY-MM-DD hh:mm:ss',
+            useCurrent: false //Important! See issue #1075
+        });
+        $("#FromDate").on("dp.change", function (e) {
+            $('#ToDate').data("DateTimePicker").minDate(e.date);
+        });
+        $("#ToDate").on("dp.change", function (e) {
+            $('#FromDate').data("DateTimePicker").maxDate(e.date);
+        });
+    });
+</script>
+</html>

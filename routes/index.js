@@ -54,7 +54,7 @@ router.get('/calendars', function(req, res){
    } else res.render('login');
 });
 
-// Get calendar with all events for specific Calendar
+// Get all the events for a specific calendar
 router.get('/calendar', function(req, res) {
   if (req.session.userID) {
       let calId = req.query.id;
@@ -72,12 +72,16 @@ router.get('/calendar', function(req, res) {
       mysql_tool.query( sql, function(response) {
               if (response) {
                   res.render('calendar', {
-                      calendar: response.rows
+                      calendar: response.rows,
+                      calID: calId
                   });
               }
               else{
-                  console.log("Error retrieving events for calendar");
-                  res.redirect('/?error=1');
+                  console.log("No events for calendar");
+                  res.render('calendar',{
+                      calendar: [],
+                      calID: calId
+                  });
               }
           });
   } else res.render('login');
@@ -124,6 +128,66 @@ router.post('/calendar/create', function(req, res){
             }
         });
     } else res.render('login');
+});
+
+// Directs to the create-event template
+router.get('/create-event/:calId', function(req, res){
+   if(req.session.userID){
+       res.render('create-event', {
+           calId: req.params.calId
+       });
+   } else res.render('login');
+});
+
+router.post('/event/create/:calId', function(req, res){
+   if(req.session.userID){
+       let calId = req.params.calId;
+       let title = req.body.Title;
+       let label = req.body.Label;
+       let desc = req.body.Description;
+       let location = req.body.Location;
+       let from = req.body.FromDate;
+       let to = req.body.ToDate;
+       let nextId = 0;
+       let newId;
+
+       // Get the next ID
+       mysql_tool.query('SELECT MAX(CONVERT(SUBSTRING(EventID, 6), SIGNED INTEGER)) as next FROM event', function(response) {
+           if(!response || response.error) res.redirect('/?error=1');
+           else{
+               // Create new ID
+               nextId = response.rows[0].next + 1;
+               newId = 'event' + nextId;
+
+               let querystr =
+                   "INSERT INTO event(eventID, Description, Location, Title, Label) " +
+                   "VALUES(?, ?, ?, ?, ?); " +
+                   "INSERT INTO eventschedule(EventID, FromDate, ToDate) " +
+                   "VALUES(?, ?, ?); " +
+                   "INSERT INTO containsevent(EventID, CalendarID) " +
+                   "VALUES(?, ?); " +
+                   "INSERT INTO manageseve(userID, eventID) " +
+                   "VALUES(?, ?);"
+
+               let sql = mysql_tool.format(querystr, [
+                   newId, desc, location, title, label,
+                   newId, from, to,
+                   newId, calId,
+                   req.session.userID, newId
+               ]);
+
+               mysql_tool.query( sql, function(response) {
+                   if(!response || response.error){
+                       console.log('Error creating event');
+                       res.redirect('/?error=1');
+                   }else{
+                       console.log('Event created for calendar: ' + calId);
+                       res.redirect('/calendar?id=' + calId);
+                   }
+               });
+           }
+       });
+   } else res.render('login');
 });
 
 // Authorize login
