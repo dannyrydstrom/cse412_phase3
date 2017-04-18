@@ -86,6 +86,13 @@ router.get('/calendar', function(req, res) {
   } else res.render('login');
 });
 
+// Directs to the Create-Calendar template
+router.get('/create-calendar', function(req, res){
+    if(req.session.userID){
+        res.render('create-calendar');
+    } else res.render('login');
+});
+
 // Authorize login
 router.post('/auth', function(req, res) {
   // get userID and pass from request

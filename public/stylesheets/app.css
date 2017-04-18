@@ -1,12 +1,34 @@
-body {
+.btn-sq-lg {
+  width: 150px !important;
+  height: 150px !important;
+}
+
+.btn-sq {
+  width: 100px !important;
+  height: 100px !important;
+  font-size: 10px;
+}
+
+.btn-sq-sm {
+  width: 50px !important;
+  height: 50px !important;
+  font-size: 10px;
+}
+
+.btn-sq-xs {
+  width: 25px !important;
+  height: 25px !important;
+  padding:2px;
+}
+.body {
   background-color: #fcfcfc;
   color: #263238;
 }
 
-body {
+.body {
   padding: 20px 0px 200px;
 }
-h1.title {
+.h1.title {
   font-family: 'Roboto', sans-serif;
   font-weight: 900;
 }

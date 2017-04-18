@@ -8,7 +8,18 @@
 <body>
     <%- include('navbar');%>
     <div class="container">
-        <h2 class="col-md-offset-6">User Calendars</h2>
+        <div class="page-header jumbotron">
+            <div class="btn-toolbar pull-right">
+                <div class="btn-group">
+                    <a href="/create-calendar" class="btn btn-sq btn-secondary">
+                        <i class="fa fa-5x fa-calendar-plus-o"></i><br/><br/>
+                        Create Calendar
+                    </a>
+                </div>
+            </div>
+            <h2>My Calendars</h2>
+        </div>
+
         <table class="table table-striped table-bordered table-hover">
             <thead>
                 <tr>

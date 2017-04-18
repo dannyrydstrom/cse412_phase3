@@ -7,7 +7,8 @@ $(document).ready(function() {
             id: event.EventID,
             title: event.Title,
             start: event.FromDate,
-            end: event.ToDate
+            end: event.ToDate,
+            description: event.Description
         });
     });
 
