@@ -75,13 +75,10 @@ router.get('/calendar', function(req, res) {
                       calendar: response.rows
                   });
               }
-              else if (response && response.error) {
+              else{
                   console.log("Error retrieving events for calendar");
-                  if(response.error.code == "ER_DUP_ENTRY")
-                      res.redirect('/?error=2');
-                  else res.redirect('/?error=3');
+                  res.redirect('/?error=1');
               }
-              else res.redirect('/?error=3');
           });
   } else res.render('login');
 });
@@ -90,6 +87,42 @@ router.get('/calendar', function(req, res) {
 router.get('/create-calendar', function(req, res){
     if(req.session.userID){
         res.render('create-calendar');
+    } else res.render('login');
+});
+
+// Create a new Calendar for a user
+router.post('/calendar/create', function(req, res){
+    if(req.session.userID){
+        console.log("Creating cal");
+        let nextId = 0;
+        let newId;
+        mysql_tool.query('SELECT MAX(CONVERT(SUBSTRING(calID, 4), SIGNED INTEGER)) as next FROM calendar', function(response){
+            if (response && response.error) {
+                if(response.error.code == "ER_DUP_ENTRY") { res.redirect('/?error=2');}
+                else res.redirect('/?error=3');
+            } else if(!response) {res.redirect('/?error=3');}
+            else { // Success
+                // Create new ID
+                nextId = response.rows[0].next + 1;
+                newId = 'cal' + nextId;
+
+                let querystr =
+                    "INSERT INTO calendar(calID, name) " +
+                    "VALUES (?, ?); " +
+                    "INSERT INTO managesCal(userID, calID) " +
+                    "VALUES(?, ?);";
+                let sql = mysql_tool.format(querystr, [
+                    newId, req.body.name,
+                    req.session.userID, newId
+                ]);
+
+                // run query to Update Calendar and managesCal Table
+                mysql_tool.query( sql, function(response) {
+                        if (response) { res.redirect('/calendars'); }
+                        else { res.redirect('/?error=1'); }
+                });
+            }
+        });
     } else res.render('login');
 });
 
