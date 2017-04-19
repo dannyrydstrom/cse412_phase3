@@ -338,12 +338,13 @@ router.post('/register', function(req, res) {
                   "INSERT INTO user (userID, password) " +
                     "VALUES (?, ?); " +
                   "INSERT INTO partof(userID, groupID) " +
-                    "SELECT ?, groupID " +
-                    "FROM groups " +
-                    "WHERE groupID IN ( " +
-		                  "SELECT groupID " +
-		                  "FROM groups " +
-		                  "WHERE isDefault = 1 ); " +
+                    "SELECT ?, g.groupID " +
+	                "FROM groups g"
+	                "WHERE EXISTS ("
+		            "SELECT groupID "
+		            "FROM groups "
+		            "WHERE isDefault = 1"
+                    "AND g.groupID = groupID);" +
                   "COMMIT;"
   let sql = mysql_tool.format(querystr, [givenUID, givenPass, givenUID]);
 
