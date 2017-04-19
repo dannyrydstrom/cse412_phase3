@@ -188,6 +188,43 @@ router.post('/calendar/create', function(req, res){
     } else res.render('login');
 });
 
+// Filter Managed Calendars based on Number of Events
+// id: [1=relaxed, 2=moderate, 3=busy], default=all
+router.get('/calendar/managed/filter/:id', function(req, res){
+    if(req.session.userID){
+        let filter = '';
+        switch(req.params.id){
+            case 1:
+                filter = 'HAVING COUNT(ce.EventID) <= 15';
+                break;
+            case 2:
+                filter = 'HAVING COUNT(ce.EventID) > 15 AND COUNT(ce.EventID) <= 35';
+                break;
+            case 3:
+                filter = 'HAVING COUNT(ce.EventID) > 35';
+                break;
+            default :
+                filter = 'HAVING COUNT(ce.EventID) >= 0';
+                break;
+        }
+        let sql =
+            "SELECT c.calID " +
+            "FROM calendar c " +
+            "JOIN containsevent ce ON c.calID = ce.CalendarID " +
+            "GROUP BY c.calID " +
+            filter;
+
+        mysql_tool.query(sql, function(response) {
+            if(!response) { res.render('/?error=1'); }
+            else{
+                res.render('all-calendars',{
+                    calendars: response.rows
+                });
+            }
+        });
+    } else res.render('login');
+});
+
 // Directs to the create-event template
 router.get('/create-event/:calId', function(req, res){
    if(req.session.userID){
@@ -197,6 +234,7 @@ router.get('/create-event/:calId', function(req, res){
    } else res.render('login');
 });
 
+// Creates an event for a specific calendar
 router.post('/event/create/:calId', function(req, res){
    if(req.session.userID){
        let calId = req.params.calId;
