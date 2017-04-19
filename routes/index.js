@@ -198,18 +198,18 @@ router.get('/calendar/filter/:id', function(req, res){
             if(!response1) { console.log("Error retrieving ManagedCalendars") }
             else{
                 sql = QueryGroupCalendars(req.session.userID, true);
-                sql = sql + filter;
+                sql = sql + "GROUP BY cal.calID " + filter;
                 mysql_tool.query(sql, function(response2){
                     if(!response2) { console.log("Error retrieving Grouped Calendars") }
                     else{
                         sql = QuerySharedCalendars(req.session.userID, true);
-                        sql = sql + filter;
+                        sql = sql + "GROUP BY calendar.calID " + filter;
                         mysql_tool.query(sql, function(response3){
                             if(!response3){ console.log("Error retrieving SharedCalendars") }
                             else{
                                 let calendars = response1.rows ? response1.rows : {};
-                                let shared = response2.rows ? response2.rows : {};
                                 let group = response2.rows ? response2.rows : {};
+                                let shared = response3.rows ? response3.rows : {};
 
                                 res.render('all-calendars',{
                                     calendars: calendars,
@@ -380,7 +380,7 @@ function QueryGroupCalendars(userID, events){
 
     if(events){
         eve = ', containsevent ce '
-        eve2 = ' AND ce.calID = cal.calID '
+        eve2 = ' AND ce.CalendarID = cal.calID '
     }
 
     let querystr =
@@ -400,10 +400,11 @@ function QuerySharedCalendars(userID, events){
 
     if(events){
         eve = ', containsevent ce '
-        eve2 = ' AND ce.calID = cal.calID '
+        eve2 = ' AND ce.CalendarID = calendar.calID '
     }
 
-    let querystr = "SELECT calendar.calID, calendar.name " +
+    let querystr =
+        "SELECT calendar.calID, calendar.name " +
         "FROM calendar, sharescal " + eve +
         "WHERE sharescal.calID = calendar.calID " +
         "AND sharescal.userID = ? "  +
