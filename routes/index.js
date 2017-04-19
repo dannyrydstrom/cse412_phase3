@@ -55,6 +55,44 @@ router.get('/groups', function(req, res) {
   else res.render('login');
 });
 
+// Directs to the Create-Group template
+router.get('/create-group', function(req, res){
+    if(req.session.userID){
+        res.render('create-group');
+    } else res.render('login');
+});
+
+// Create a new Group for a user
+router.post('/groups/create', function(req, res){
+    if(req.session.userID){
+        console.log("Creating group");
+		let querystr =
+			"INSERT INTO groups(groupID, isPrivate) " +
+			"VALUES (?, ?); " +
+			"INSERT INTO partof(groupID, userID) " + 
+			"VALUES (?, ?); " + 
+			"INSERT INTO managesgroup(userID, groupID) " + 
+			"VALUES (?, ?); ";
+		let c_prv = 0;
+		if( req.body.isPrivate == "True" )
+			{
+			c_prv = 1;
+			}
+
+		let sql = mysql_tool.format(querystr, [
+			req.body.groupID, c_prv,
+			req.body.groupID, req.session.userID, 
+			req.session.userID, req.body.groupID
+		]);
+
+		// run query to Update Calendar and managesCal Table
+		mysql_tool.query( sql, function(response) {
+				if (response) { res.redirect('/groups'); }
+				else { res.redirect('/?error=1'); }
+		});
+    } else res.render('login');
+});
+
 // List of all User Calendars
 router.get('/calendars', function(req, res){
    if(req.session.userID){
